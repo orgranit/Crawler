@@ -21,7 +21,7 @@ public class SynchronizedQueue<T> {
      */
     public SynchronizedQueue(int capacity) {
         this.buffer = (T[])(new Object[capacity]);
-        this.producers = 0; // The only producer in Lab1 is Main-Thread
+        this.producers = 0;
         this.size = 0;
         this.capacity = capacity;
     }
@@ -81,6 +81,10 @@ public class SynchronizedQueue<T> {
     /**
      * This method blocks producer from acquiring new items until space 
      * becomes available.
+     *
+     * we use this method in Lab1 to make the producer (main-thread) wait, until
+     * at least one consumer is ready, and only then to continue listening.
+     * In 'enqueue' we make producer to wait while he already acquired a new item,
      * 
      */
     public void waitForFreeThread() {

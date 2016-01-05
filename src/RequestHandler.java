@@ -45,7 +45,6 @@ public class RequestHandler implements Runnable {
 					connectionAlive = httpRequest.getHTTPVersion().equals(Utils.HTTP_VERSION_1_1);
 				}
 			}catch(WebServerRuntimeException | IOException e){
-				//TODO: Create HTTPResponse about internal server error
 				HTTPResponse errorResponse = new HTTPResponse(e);
 				try{
 					System.out.println(errorResponse.getResponseHeader());

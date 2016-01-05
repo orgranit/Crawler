@@ -1,22 +1,9 @@
 import java.io.* ;
 import java.net.* ;
 
-public final class Crawler {
+public final class WebServer {
 
-
-	public static void main(String argv[]) throws Exception
-	{
-		boolean isParsed = Utils.parseConfigFile();
-		if(isParsed){
-			startSession();
-		} else {
-			System.out.println("There was Problem parsing 'config.ini'.");
-		}
-
-		System.out.println("bye bye...");
-	}
-
-	private static void startSession() {
+	public void startSession() {
 		// Establish the listen socket.
 		ServerSocket socket = null;
 		ThreadPool threadPool = null;

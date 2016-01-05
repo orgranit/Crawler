@@ -45,6 +45,11 @@ public class Utils {
 	protected static String ROOT;
 	protected static String DEFUALT_PAGE;
 	protected static int MAX_THREADS;
+	protected static int MAX_DOWNLOADERS;
+	protected static int MAX_ANALAYZERS;
+	protected static String[] IMAGE_EXTENSIONS;
+	protected static String[] VIDEO_EXTENSIONS;
+	protected static String[] DOC_EXTENSIONS;
 	protected static int CHUNK_SIZE = 200;
 	
 	protected static boolean parseConfigFile() {
@@ -73,6 +78,26 @@ public class Utils {
 					MAX_THREADS = Integer.parseInt(value);
 					numOfParsedProps++;
 					break;
+				case "maxDownloaders":
+					MAX_DOWNLOADERS = Integer.parseInt(value);
+					numOfParsedProps++;
+					break;
+				case "maxAnalyzers":
+					MAX_ANALAYZERS = Integer.parseInt(value);
+					numOfParsedProps++;
+					break;
+                case "imageExtensions":
+	                IMAGE_EXTENSIONS = value.replaceAll(" ", "").split(",");
+                    numOfParsedProps++;
+                    break;
+                case "videoExtensions":
+	                VIDEO_EXTENSIONS = value.replaceAll(" ", "").split(",");
+                    numOfParsedProps++;
+                    break;
+                case "documentExtensions":
+	                DOC_EXTENSIONS = value.replaceAll(" ", "").split(",");
+                    numOfParsedProps++;
+                    break;
 				default:
 					break;
 				}
@@ -81,7 +106,7 @@ public class Utils {
 			//
 		}
 		
-		return (numOfParsedProps == 4);		
+		return (numOfParsedProps == 9);
 	}
 	
 	protected static byte[] readFile(File file) throws Exception

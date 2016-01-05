@@ -22,7 +22,7 @@ public class ThreadPool {
 			// the double lock
 			synchronized (LOCK) {
 				if (INSTANCE == null) {
-					INSTANCE = new ThreadPool(Utils.MAX_THREADS);
+					INSTANCE = new ThreadPool(Utils.MAX_ANALAYZERS);
 				}
 			}
 		}
