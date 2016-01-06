@@ -1,5 +1,10 @@
 import jdk.internal.org.objectweb.asm.tree.analysis.Analyzer;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 /**
@@ -15,6 +20,7 @@ public class Crawler {
 	private boolean disrespectRobots = false;
 	private String domain = null;
 	private boolean isCrawling = false;
+	private static CrawlStatistics crawlStatistics = new CrawlStatistics();
 
 	private SynchronizedQueue<String> urlQueue;
 	private SynchronizedQueue<String> htmlQueue;
@@ -65,12 +71,30 @@ public class Crawler {
 		}
 	}
 
-	public void crawl() {
+	public void crawl() throws IOException {
+		// validate domain if not valid throw exception
+		validateDomain(this.domain);
+
+		// initilly this thread is producer for htmlQueue because it enqueue the first url to crawl
+		urlQueue.registerProducer();
+		urlQueue.enqueue(this.domain);
+
+		// Initialize and start the crawling process
 		Thread[] downloaders = initAndStartThreads(this.maxDownloaders, this.htmlQueue, this.urlQueue, true);
 		Thread[] analayzers = initAndStartThreads(this.maxAnalyzers, this.urlQueue, this.htmlQueue, false);
+
+		// unregister as producer becuase this thread cant enqueue more items
+		urlQueue.unregisterProducer();
+
 		// wait for all threads to finish
 		waitForAllThreadsToFinish(downloaders);
 		waitForAllThreadsToFinish(analayzers);
+
+	}
+
+	private void validateDomain(String domain) throws IOException {
+		//TODO
+
 
 	}
 
@@ -92,7 +116,7 @@ public class Crawler {
 			if (isDownloder){
 				threadsArr[i] = new Thread(new Downloader(producerQueue, consumerQueue));
 			} else {
-				threadsArr[i] = new Thread(new Analayzer(producerQueue, consumerQueue));
+				threadsArr[i] = new Thread(new Analayzer(producerQueue, consumerQueue, this.crawlStatistics));
 			}
 			threadsArr[i].start();
 		}

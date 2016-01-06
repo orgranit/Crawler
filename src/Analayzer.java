@@ -5,7 +5,7 @@ public class Analayzer implements Runnable {
 	private final SynchronizedQueue<String> urlQueue;
 	private final SynchronizedQueue<String> htmlQueue;
 
-	public Analayzer(SynchronizedQueue<String> producerQueue, SynchronizedQueue<String> consumerQueue) {
+	public Analayzer(SynchronizedQueue<String> producerQueue, SynchronizedQueue<String> consumerQueue, CrawlStatistics crawlStatistics) {
 		this.urlQueue = producerQueue;
 		this.htmlQueue = consumerQueue;
 

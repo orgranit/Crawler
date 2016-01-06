@@ -70,7 +70,11 @@ public class RequestHandler implements Runnable {
 				if (!crawler.isCrawling()) {
 					crawler.setCrawling(true);
 					crawler.setParams(httpRequest.getParams());
-					crawler.crawl();
+					try {
+						crawler.crawl();
+					} catch (IOException e) {
+						httpRequest.setResourcePath("/url_not_valid.html");
+					}
 					crawler.setCrawling(false);
 				} else {
 					httpRequest.setResourcePath("/crawler_is_running.html");

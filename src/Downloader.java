@@ -19,5 +19,7 @@ public class Downloader implements Runnable {
 			//TODO
 		}
 
+		this.htmlQueue.unregisterProducer();
+
 	}
 }
