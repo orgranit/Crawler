@@ -34,8 +34,11 @@ public class HTTPResponse {
 		if(this.request.isBadRequest()){
 			this.responseCode = Utils.BAD_REQUEST;	
 
-		} else if (!this.request.isSupportedMethod()){
+		} else if (!this.request.isSupportedMethod()) {
 			this.responseCode = Utils.NOT_IMPLEMENTED;
+
+		} else if(this.request.isForbidden()){
+			this.responseCode = Utils.FORBIDDEN;
 
 		} else { 
 			this.responseCode = Utils.OK;

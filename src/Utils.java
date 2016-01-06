@@ -39,7 +39,8 @@ public class Utils {
 	final protected static String NOT_IMPLEMENTED = "501 Not Implemented";
 	final protected static String BAD_REQUEST = "400 Bad Request";
 	final protected static String ERROR = "500 Internal Server Error";
-	
+	public static final String FORBIDDEN = "403 Forbidden";
+
 	// Configurations 
 	protected static int PORT;
 	protected static String ROOT;
@@ -177,5 +178,18 @@ public class Utils {
 		}	
 		writeToFile.write("</body></html>".getBytes());
 		writeToFile.close();
+	}
+
+	public static boolean isValidCrawlRequest(HTTPRequest httpRequest) {
+		return httpRequest.getResourcePath().equals("/execResult.html");
+	}
+
+	public static boolean isFromDefault(String referer) {
+		boolean fromDefault = false;
+		if (referer != null){
+			fromDefault = referer.equals("http://localhost:8080/") || referer.equals("http://localhost:8080/index.html");
+		}
+
+		return  fromDefault;
 	}
 }

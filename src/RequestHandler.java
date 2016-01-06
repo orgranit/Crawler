@@ -12,7 +12,6 @@ public class RequestHandler implements Runnable {
 	public RequestHandler(SynchronizedQueue<Socket> jobsQueue, int id) {
 		this.jobsQueue = jobsQueue;
 		this.id = id;
-		
 		//Used for TRACE method
 		this.allHeaders = "";
 	}
@@ -38,6 +37,7 @@ public class RequestHandler implements Runnable {
 				while(connectionAlive){
 					System.out.println("Thread " + this.id +" processing request.");
 					HTTPRequest httpRequest = processRequest(inFromClient);
+					crawlIfNeedded(httpRequest);
 					System.out.println("");
 					processResponse(outToClient, httpRequest);
 					
@@ -59,6 +59,22 @@ public class RequestHandler implements Runnable {
 			} catch (Exception e) {
 				connectionAlive = false;
 				System.out.println("Connection Lost");
+			}
+		}
+	}
+
+	private void crawlIfNeedded(HTTPRequest httpRequest) {
+		if (Utils.isValidCrawlRequest(httpRequest)) {
+			if(Utils.isFromDefault(httpRequest.getHeader("Referer"))){
+				Crawler crawler = Crawler.getInstance();
+				if (!crawler.isCrawling()) {
+					crawler.setCrawling(true);
+					crawler.setParams(httpRequest.getParams());
+					crawler.crawl();
+					crawler.setCrawling(false);
+				}
+			} else {
+				httpRequest.setForbidden();
 			}
 		}
 	}

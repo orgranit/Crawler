@@ -10,6 +10,7 @@ public class HTTPRequest {
 	protected HashMap<String,String> headers;
 	private HashMap<String,String> params;
 	private boolean isBadRequest = false;
+	private boolean isForbidden = false;
 	private boolean isChunked = false;
 	private boolean isSupportedMethod;
 	protected boolean internalError = false;
@@ -27,7 +28,7 @@ public class HTTPRequest {
 			this.HTTPVersion = firstLineArr[2].trim();
 
 			if(this.resourcePath.contains("../")){
-				this.isBadRequest = true;
+				this.isForbidden = true;
 			}else{
 				// the params are separated by '?' from the requested page
 				int delim = this.resourcePath.indexOf("?");
@@ -163,5 +164,13 @@ public class HTTPRequest {
 		} catch (WebServerRuntimeException e) {
 			this.internalError = true;
 		}
+	}
+
+	public boolean isForbidden() {
+		return this.isForbidden;
+	}
+
+	public void setForbidden() {
+		this.isForbidden = true;
 	}
 }
