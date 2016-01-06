@@ -1,3 +1,5 @@
+import jdk.internal.org.objectweb.asm.tree.analysis.Analyzer;
+
 import java.util.HashMap;
 
 /**
@@ -64,6 +66,37 @@ public class Crawler {
 	}
 
 	public void crawl() {
+		Thread[] downloaders = initAndStartThreads(this.maxDownloaders, this.htmlQueue, this.urlQueue, true);
+		Thread[] analayzers = initAndStartThreads(this.maxAnalyzers, this.urlQueue, this.htmlQueue, false);
+		// wait for all threads to finish
+		waitForAllThreadsToFinish(downloaders);
+		waitForAllThreadsToFinish(analayzers);
 
+	}
+
+	private void waitForAllThreadsToFinish(Thread[] threads) {
+		for (Thread thread : threads) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				System.err.println("Thread interrupted");
+			}
+		}
+	}
+
+
+	private Thread[] initAndStartThreads(int numOfThreads, SynchronizedQueue<String> producerQueue,
+	                                     SynchronizedQueue<String> consumerQueue, boolean isDownloder) {
+		Thread[] threadsArr = new Thread[numOfThreads];
+		for (int i = 0; i < numOfThreads ; i++) {
+			if (isDownloder){
+				threadsArr[i] = new Thread(new Downloader(producerQueue, consumerQueue));
+			} else {
+				threadsArr[i] = new Thread(new Analayzer(producerQueue, consumerQueue));
+			}
+			threadsArr[i].start();
+		}
+
+		return  threadsArr;
 	}
 }
