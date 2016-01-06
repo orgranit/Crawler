@@ -173,4 +173,8 @@ public class HTTPRequest {
 	public void setForbidden() {
 		this.isForbidden = true;
 	}
+
+	public void setResourcePath(String path) {
+		this.resourcePath = path;
+	}
 }

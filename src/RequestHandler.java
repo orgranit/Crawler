@@ -72,6 +72,8 @@ public class RequestHandler implements Runnable {
 					crawler.setParams(httpRequest.getParams());
 					crawler.crawl();
 					crawler.setCrawling(false);
+				} else {
+					httpRequest.setResourcePath("/crawler_is_running.html");
 				}
 			} else {
 				httpRequest.setForbidden();
