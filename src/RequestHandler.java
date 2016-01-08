@@ -63,6 +63,8 @@ public class RequestHandler implements Runnable {
 		}
 	}
 
+	// this method check if the given http request is a valid crawl request and
+	// if the request origin is our default page, and if so, we start crawling.
 	private void crawlIfNeedded(HTTPRequest httpRequest) {
 		if (Utils.isValidCrawlRequest(httpRequest)) {
 			if(Utils.isFromDefault(httpRequest.getHeader("Referer"))){
@@ -72,11 +74,15 @@ public class RequestHandler implements Runnable {
 					crawler.setParams(httpRequest.getParams());
 					try {
 						crawler.crawl();
+						httpRequest.setResourcePath(crawler.resultHtmlPath());
 					} catch (IOException e) {
+						// case we couldn't resolve given domain from the user. this isnt
+						// the case when we fail to resolve a url discovered by the downloaders
 						httpRequest.setResourcePath("/url_not_valid.html");
 					}
 					crawler.setCrawling(false);
 				} else {
+					// In this case another thread tries to start the crawler while it already running
 					httpRequest.setResourcePath("/crawler_is_running.html");
 				}
 			} else {
